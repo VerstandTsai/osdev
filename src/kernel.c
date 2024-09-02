@@ -11,6 +11,14 @@
         :: "p"(#reg "=%#x\r\n") \
     )
 
+void timer_interrupt() {
+    printk("timer\r\n");
+}
+
+void keyboard_interrupt() {
+    printk("keyboard\r\n");
+}
+
 void syscall(const struct SavedRegs regs) {
     printk("System call invoked with eax=%#x\r\n", regs.eax);
     printk("System call invoked with ebx=%#x\r\n", regs.ebx);
@@ -26,9 +34,10 @@ void kmain() {
     console_init();
     tty_init();
     idt_init();
+    idt_set_gate(32, INT_GATE_32, RING_3, timer_interrupt);
+    idt_set_gate(33, INT_GATE_32, RING_3, keyboard_interrupt);
     idt_set_gate(0x80, INT_GATE_32, RING_3, syscall);
     __asm__("sti");
-    __asm__("int 13");
     __asm__("mov eax, 0x9487");
     __asm__("mov ebx, 0x9");
     __asm__("mov ecx, 0x8");

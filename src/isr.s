@@ -7,9 +7,19 @@ isr_\number:
     pusha
     call [isr_table+4*\number]
     popa
+
     .if \error
-    add esp, 0
+    add esp, 4
     .endif
+
+    .if \number - 32 + 1
+    mov al, 0x20
+    .if \number - 32 - 8 + 1
+    out 0xa0, al
+    .endif
+    out 0x20, al
+    .endif
+
     iret
     .endm
 
