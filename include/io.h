@@ -2,7 +2,7 @@
 #define _IO_H
 
 #define inb(port) ({ \
-    int _x; \
+    unsigned char _x; \
     __asm__("in al, dx" : "=a"(_x) : "d"(port)); \
     _x; \
 })
