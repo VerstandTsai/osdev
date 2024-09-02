@@ -8,7 +8,7 @@ CFLAGS += -std=c99 -Werror -Wall -Wextra
 CFLAGS += -O3
 
 OBJECTS  = build/start.o build/kernel.o
-OBJECTS += build/interrupt.o build/isr.o
+OBJECTS += build/idt.o build/isr.o
 OBJECTS += build/tty.o build/console.o build/vga8x16.o
 OBJECTS += build/string.o build/vsprintf.o build/printk.o
 

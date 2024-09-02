@@ -1,5 +1,5 @@
 #include <io.h>
-#include <interrupt.h>
+#include <idt.h>
 #include <stdint.h>
 
 #define PICM 0x20

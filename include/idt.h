@@ -1,5 +1,5 @@
-#ifndef _INTERRUPT_H
-#define _INTERRUPT_H
+#ifndef _IDT_H
+#define _IDT_H
 
 #include <stdint.h>
 
@@ -37,5 +37,5 @@ void idt_set_gate(
     void (*isr)()
 );
 
-#endif // _INTERRUPT_H
+#endif // _IDT_H
 

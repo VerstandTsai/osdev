@@ -1,6 +1,6 @@
 #include <kernel.h>
 #include <tty.h>
-#include <interrupt.h>
+#include <idt.h>
 
 #define printreg(reg) \
     __asm__( \
