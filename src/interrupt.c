@@ -1,4 +1,4 @@
-#include <idt.h>
+#include <interrupt.h>
 #include <stdint.h>
 
 #define IDT_NUM_ENTRIES 256
