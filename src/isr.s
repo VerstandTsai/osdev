@@ -12,9 +12,9 @@ isr_\number:
     add esp, 4
     .endif
 
-    .if \number - 32 + 1
+    .if \number >= 32
     mov al, 0x20
-    .if \number - 32 - 8 + 1
+    .if \number >= 32 + 8
     out 0xa0, al
     .endif
     out 0x20, al

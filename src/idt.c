@@ -11,8 +11,6 @@
 
 #define PICS_INDEX 2
 
-#define PIC_EOI 0x20
-
 #define CMD_INIT 0x10
 #define CMD_ICW4 0x01
 
