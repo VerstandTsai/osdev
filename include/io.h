@@ -7,8 +7,8 @@
     _x; \
 })
 
-#define outb(value, port) \
-    __asm__("out dx, al" :: "a"(value), "d"(port))
+#define outb(port, value) \
+    __asm__("out dx, al" :: "d"(port), "a"(value))
 
 #endif // _IO_H
 
