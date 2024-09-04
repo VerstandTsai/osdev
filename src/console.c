@@ -17,6 +17,7 @@
 #define HT() { advance_cursor(TABSIZE); cursor.x = cursor.x / 8 * 8; }
 #define LF() { cursor.y++; SCROLL_UP_IF_NEEDED(); }
 #define CR() { cursor.x = 0; }
+#define DEL() { advance_cursor(-1); draw_character(' '); }
 
 struct TextCursor {
     uint8_t shape[FONT_HEIGHT];
@@ -131,6 +132,7 @@ static void console_putc(char ch) {
         case '\t': HT(); break;
         case '\n': LF(); break;
         case '\r': CR(); break;
+        case '\x7f': DEL(); break;
         default:
             draw_character(ch);
             advance_cursor(1);
