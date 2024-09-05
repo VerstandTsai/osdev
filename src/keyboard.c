@@ -1,11 +1,16 @@
 #include <io.h>
 #include <kernel.h>
 
-#define CTRL 1
-#define SHIFT 2
-#define ALT 4
+#define LCTRL 1
+#define RCTRL 2
+#define LALT 4
+#define RALT 8
+#define LSHIFT 16
+#define RSHIFT 32
 
 static int keystates = 0;
+
+static int extend = 0;
 
 static char keymap_normal[] =
     "\0\x1b"                // empty, ESC
@@ -43,27 +48,38 @@ static char keymap_shift[] =
     "\0\0"                  // F11, F12
 ;
 
-void keyboard_irq() {
-    unsigned char scancode = inb(0x60);
-    switch (scancode & 0x7f) {
-    case 0x2a:
-    case 0x36:
-        if (scancode & 0x80)
-            keystates ^= SHIFT;
-        else
-            keystates |= SHIFT;
-        break;
+static void press_key(unsigned char scancode) {
+    switch (scancode) {
+    case 0x2a: keystates |= LSHIFT; break;
+    case 0x36: keystates |= RSHIFT; break;
     default:
         if (scancode & 0x80) break;
         char *keymap;
-        switch (keystates) {
-        case SHIFT:
+        if (keystates & (LSHIFT | RSHIFT)) {
             keymap = keymap_shift;
-            break;
-        default:
+        } else {
             keymap = keymap_normal;
         }
         printk("%c", keymap[scancode]);
+    }
+}
+
+static void release_key(unsigned char scancode) {
+    switch (scancode) {
+    case 0x2a: keystates &= ~LSHIFT; break;
+    case 0x36: keystates &= ~RSHIFT; break;
+    default: break;
+    }
+}
+
+void keyboard_irq() {
+    unsigned char scancode = inb(0x60);
+    if (scancode == 0xe0) {
+        extend = 1;
+    } else if (scancode & 0x80) {
+        release_key(scancode & 0x7f);
+    } else {
+        press_key(scancode);
     }
 }
 
