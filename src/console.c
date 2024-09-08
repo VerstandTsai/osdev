@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <vesa.h>
+#include <tty.h>
 
 #define FONT _binary_src_vga8x16_font_start
 #define FONT_WIDTH 8
@@ -159,10 +160,10 @@ void console_init() {
     draw_cursor();
 }
 
-void console_write(const char *src, int count) {
+void console_write(struct RingBuffer *ring) {
     draw_cursor(); // Actually un-draws the cursor
-    for (int i=0; i<count; i++) {
-        console_putc(src[i]);
+    while (!ring_empty(ring)) {
+        console_putc(ring_pop(ring));
     }
     draw_cursor();
 }

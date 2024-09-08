@@ -8,6 +8,9 @@
 // Number of special characters
 #define NCCS 16
 
+#define SPECIAL_CHARS \
+    {-1}
+
 // Special character indices
 enum {
     VEOF,

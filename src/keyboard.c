@@ -1,4 +1,5 @@
 #include <io.h>
+#include <tty.h>
 #include <kernel.h>
 
 #define LCTRL 1
@@ -60,7 +61,7 @@ static void press_key(unsigned char scancode) {
         } else {
             keymap = keymap_normal;
         }
-        printk("%c", keymap[scancode]);
+        tty_sendkey(0, keymap[scancode]);
     }
 }
 

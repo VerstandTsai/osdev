@@ -1,5 +1,6 @@
 #include <tty.h>
 #include <termios.h>
+#include <string.h>
 
 void ring_init(struct RingBuffer *ring)             { ring->head = ring->tail = 0; }
 void ring_push(struct RingBuffer *ring, char value) { ring->buffer[ring->tail++] = value; }
@@ -14,10 +15,42 @@ struct Teletype {
     int allocated;
 };
 
-void tty_init() {}
+static struct Teletype ttys[64];
+
+void tty_init() {
+    ttys[0] = (struct Teletype){
+        {
+            ONLCR,
+            ICANON | ECHO,
+            SPECIAL_CHARS
+        },
+        {{}, 0, 0},
+        {{}, 0, 0},
+        console_write,
+        1
+    };
+}
+
+void tty_sendkey(int channel, char c) {
+    struct Teletype *tty = ttys + channel;
+    ring_push(&(tty->input_queue), c);
+    if (tty->termios.c_lflag & ECHO) {
+        char buffer[4];
+        buffer[0] = c;
+        buffer[1] = '\0';
+        tty_write(channel, buffer, strlen(buffer));
+    }
+}
 
 void tty_write(int channel, const char *src, int count) {
-    console_write(src, count);
-    channel = channel + 1; // TODO: remove this line
+    struct Teletype *tty = ttys + channel;
+    for (int i=0; i<count; i++) {
+        char c = src[i];
+        if (tty->termios.c_oflag & ONLCR && c == '\n') {
+            ring_push(&(tty->output_queue), '\r');
+        }
+        ring_push(&(tty->output_queue), c);
+    }
+    console_write(&(tty->output_queue));
 }
 
