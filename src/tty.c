@@ -34,10 +34,16 @@ void tty_init() {
 void tty_sendkey(int channel, char c) {
     struct Teletype *tty = ttys + channel;
     ring_push(&(tty->input_queue), c);
-    if (tty->termios.c_lflag & ECHO) {
+    if (tty->termios.c_lflag & ECHO && c >= 0) {
         char buffer[4];
-        buffer[0] = c;
-        buffer[1] = '\0';
+        if (c < 32) {
+            buffer[0] = '^';
+            buffer[1] = c + '@';
+            buffer[2] = '\0';
+        } else {
+            buffer[0] = c;
+            buffer[1] = '\0';
+        }
         tty_write(channel, buffer, strlen(buffer));
     }
 }
