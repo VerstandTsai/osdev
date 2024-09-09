@@ -1,3 +1,6 @@
+#ifndef _TERMIOS_H
+#define _TERMIOS_H
+
 // Output flags
 #define ONLCR   1
 
@@ -32,4 +35,6 @@ struct termios {
     tcflag_t c_lflag;
     cc_t c_cc[NCCS];
 };
+
+#endif // _TERMIOS_H
 
