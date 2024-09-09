@@ -1,4 +1,5 @@
 #include <io.h>
+#include <tty.h>
 #include <kernel.h>
 
 #define LCTRL 1
@@ -50,17 +51,26 @@ static char keymap_shift[] =
 
 static void press_key(unsigned char scancode) {
     switch (scancode) {
+        char c;
     case 0x2a: keystates |= LSHIFT; break;
     case 0x36: keystates |= RSHIFT; break;
+    case 0x1d: keystates |= LCTRL; break;
     default:
-        if (scancode & 0x80) break;
-        char *keymap;
-        if (keystates & (LSHIFT | RSHIFT)) {
-            keymap = keymap_shift;
+        if (keystates & (LCTRL | RCTRL)) {
+            c = keymap_shift[scancode];
+            if (c == '{' || c == '|' || c == '}')
+                c = keymap_normal[scancode];
+            c -= '@';
         } else {
-            keymap = keymap_normal;
+            char *keymap;
+            if (keystates & (LSHIFT | RSHIFT)) {
+                keymap = keymap_shift;
+            } else {
+                keymap = keymap_normal;
+            }
+            c = keymap[scancode];
         }
-        printk("%c", keymap[scancode]);
+        tty_sendkey(0, c);
     }
 }
 
@@ -68,6 +78,7 @@ static void release_key(unsigned char scancode) {
     switch (scancode) {
     case 0x2a: keystates &= ~LSHIFT; break;
     case 0x36: keystates &= ~RSHIFT; break;
+    case 0x1d: keystates &= ~LCTRL; break;
     default: break;
     }
 }
