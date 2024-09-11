@@ -9,6 +9,7 @@ CFLAGS += -O3
 
 OBJECTS  = build/start.o build/kernel.o
 OBJECTS += build/idt.o build/isr.o build/keyboard.o
+OBJECTS += build/disk.o
 OBJECTS += build/tty.o build/console.o build/vga8x16.o
 OBJECTS += build/string.o build/vsprintf.o build/printk.o
 
