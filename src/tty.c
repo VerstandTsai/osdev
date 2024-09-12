@@ -36,7 +36,7 @@ void tty_sendkey(int channel, char c) {
     ring_push(&(tty->input_queue), c);
     if (tty->termios.c_lflag & ECHO && c >= 0) {
         char buffer[4];
-        if (c < 32) {
+        if (c < 32 && c != '\r' && c != '\n' && c != '\t') {
             buffer[0] = '^';
             buffer[1] = c + '@';
             buffer[2] = '\0';
