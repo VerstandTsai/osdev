@@ -25,9 +25,9 @@ void kmain() {
     idt_set_gate(33, INT_GATE_32, RING_0, keyboard_irq);
     idt_set_gate(46, INT_GATE_32, RING_0, disk_irq);
     __asm__("sti");
-    char buffer[512];
-    disk_read(0, buffer, 1);
-    for (int i=0; i<512; i++) {
+    unsigned char buffer[2048];
+    disk_read(0, buffer, 4);
+    for (int i=0; i<2048; i++) {
         printk("%02x", buffer[i]);
     }
 }

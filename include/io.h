@@ -3,7 +3,7 @@
 
 #define inb(port) ({ \
     unsigned char _x; \
-    __asm__("in al, dx" : "=a"(_x) : "d"(port)); \
+    __asm__ volatile ("in al, dx" : "=a"(_x) : "d"(port)); \
     _x; \
 })
 
