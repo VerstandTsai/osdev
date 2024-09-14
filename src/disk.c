@@ -1,3 +1,4 @@
+#include <kernel.h>
 #include <disk.h>
 #include <stdint.h>
 #include <io.h>
@@ -30,6 +31,7 @@ static void disk_address(uint64_t lba, uint16_t count) {
 }
 
 void disk_irq() {
+    printk("Here\n");
     if (reading) insw(DISK_IO, ptr, 256);
     else outsw(DISK_IO, ptr, 256);
     ptr += 256;

@@ -2,6 +2,7 @@
 #include <tty.h>
 #include <disk.h>
 #include <idt.h>
+#include <io.h>
 
 #define printreg(reg) \
     __asm__( \
@@ -24,10 +25,10 @@ void kmain() {
     idt_set_gate(33, INT_GATE_32, RING_0, keyboard_irq);
     idt_set_gate(46, INT_GATE_32, RING_0, disk_irq);
     __asm__("sti");
-    char str[] = "Hello, world!";
-    disk_write(130, str, 1);
-    char read[32];
-    disk_read(130, read, 1);
-    printk("%s\n", str);
+    char buffer[512];
+    disk_read(0, buffer, 1);
+    for (int i=0; i<512; i++) {
+        printk("%02x", buffer[i]);
+    }
 }
 
