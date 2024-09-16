@@ -13,11 +13,12 @@
 #define DISK_READ 0x24
 #define DISK_WRITE 0x34
 
-static int reading;
-static uint16_t *ptr;
-static volatile uint16_t sectors;
+#define DISK_DRQ (1 << 3)
+#define DISK_BSY (1 << 7)
 
-static void disk_address(uint64_t lba) {
+static int reading;
+
+static void disk_address(uint64_t lba, uint16_t sectors) {
     uint8_t *bytes = (uint8_t*)&lba;
     outb(DISK_DRIVE, 0x40);
     outb(DISK_SECTORS, sectors >> 8);
@@ -31,28 +32,30 @@ static void disk_address(uint64_t lba) {
 }
 
 void disk_irq() {
-    if (reading) insw(DISK_IO, ptr, 256);
-    else outsw(DISK_IO, ptr, 256);
-    ptr += 256;
-    sectors--;
-    inb(DISK_CMD);
+    if (reading) inb(DISK_CMD);
 }
 
 void disk_read(uint64_t lba, void *dest, uint16_t count) {
     reading = 1;
-    ptr = dest;
-    sectors = count;
-    disk_address(lba);
+    disk_address(lba, count);
     outb(DISK_CMD, DISK_READ);
-    while (sectors);
+    while (count--) {
+        while (!(inb(DISK_CMD) & DISK_DRQ));
+        insw(DISK_IO, dest, 256);
+        inb(DISK_CMD);
+    }
 }
 
 void disk_write(uint64_t lba, const void *src, uint16_t count) {
     reading = 0;
-    ptr = (uint16_t*)src;
-    sectors = count;
-    disk_address(lba);
+    disk_address(lba, count);
     outb(DISK_CMD, DISK_WRITE);
-    while (sectors);
+    while (count--) {
+        while (!(inb(DISK_CMD) & DISK_DRQ));
+        outsw(DISK_IO, src, 256);
+        inb(DISK_CMD);
+    }
+    outb(DISK_CMD, 0xe7);
+    while (inb(DISK_CMD) & DISK_BSY);
 }
 

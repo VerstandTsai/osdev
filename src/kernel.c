@@ -26,7 +26,19 @@ void kmain() {
     idt_set_gate(46, INT_GATE_32, RING_0, disk_irq);
     __asm__("sti");
     unsigned char buffer[2048];
+    disk_read(0, buffer, 2);
+    printk("Before:\n");
+    for (int i=0; i<1024; i++) {
+        printk("%02x", buffer[i]);
+    }
+    disk_read(2, buffer, 2);
+    printk("Setup:\n");
+    for (int i=0; i<1024; i++) {
+        printk("%02x", buffer[i]);
+    }
+    disk_write(0, buffer, 2);
     disk_read(0, buffer, 4);
+    printk("After:\n");
     for (int i=0; i<2048; i++) {
         printk("%02x", buffer[i]);
     }
