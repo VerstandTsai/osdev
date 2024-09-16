@@ -8,13 +8,13 @@
 })
 
 #define insw(port, addr, count) \
-    __asm__("cld; rep insw" :: "d"(port), "D"(addr), "c"(count))
+    __asm__ volatile ("cld; rep insw" : "+D"(addr) : "d"(port), "c"(count))
 
 #define outb(port, value) \
-    __asm__("out dx, al" :: "d"(port), "a"(value))
+    __asm__ volatile ("out dx, al" :: "d"(port), "a"(value))
 
 #define outsw(port, addr, count) \
-    __asm__("cld; rep outsw" :: "d"(port), "S"(addr), "c"(count))
+    __asm__ volatile ("cld; rep outsw" : "+S"(addr) : "d"(port), "c"(count))
 
 #endif // _IO_H
 
