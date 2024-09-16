@@ -105,10 +105,12 @@ static void scroll_up(int lines) {
 }
 
 static void advance_cursor(int n) {
+    __asm__("cli");
     int pos = cursor.y * console_width + cursor.x + n;
     cursor.y = pos / console_width;
     cursor.x = pos % console_width;
     SCROLL_UP_IF_NEEDED();
+    __asm__("sti");
 }
 
 static void draw_character(char ch) {
