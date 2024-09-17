@@ -23,7 +23,6 @@ void kmain() {
     idt_init();
     //idt_set_gate(32, INT_GATE_32, RING_0, timer_irq);
     idt_set_gate(33, INT_GATE_32, RING_0, keyboard_irq);
-    idt_set_gate(46, INT_GATE_32, RING_0, disk_irq);
     __asm__("sti");
     unsigned char buffer[2048];
     disk_read(0, buffer, 2);

@@ -16,8 +16,6 @@
 #define DISK_DRQ (1 << 3)
 #define DISK_BSY (1 << 7)
 
-static int reading;
-
 static void disk_address(uint64_t lba, uint16_t sectors) {
     uint8_t *bytes = (uint8_t*)&lba;
     outb(DISK_DRIVE, 0x40);
@@ -31,12 +29,7 @@ static void disk_address(uint64_t lba, uint16_t sectors) {
     outb(DISK_LBAH, bytes[2]);
 }
 
-void disk_irq() {
-    if (reading) inb(DISK_CMD);
-}
-
 void disk_read(uint64_t lba, void *dest, uint16_t count) {
-    reading = 1;
     disk_address(lba, count);
     outb(DISK_CMD, DISK_READ);
     while (count--) {
@@ -47,7 +40,6 @@ void disk_read(uint64_t lba, void *dest, uint16_t count) {
 }
 
 void disk_write(uint64_t lba, const void *src, uint16_t count) {
-    reading = 0;
     disk_address(lba, count);
     outb(DISK_CMD, DISK_WRITE);
     while (count--) {
