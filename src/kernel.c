@@ -24,22 +24,10 @@ void kmain() {
     //idt_set_gate(32, INT_GATE_32, RING_0, timer_irq);
     idt_set_gate(33, INT_GATE_32, RING_0, keyboard_irq);
     __asm__("sti");
-    unsigned char buffer[2048];
-    disk_read(0, buffer, 2);
-    printk("Before:\n");
-    for (int i=0; i<1024; i++) {
-        printk("%02x", buffer[i]);
-    }
-    disk_read(2, buffer, 2);
-    printk("Setup:\n");
-    for (int i=0; i<1024; i++) {
-        printk("%02x", buffer[i]);
-    }
-    disk_write(0, buffer, 2);
-    disk_read(0, buffer, 4);
-    printk("After:\n");
-    for (int i=0; i<2048; i++) {
-        printk("%02x", buffer[i]);
-    }
+    char str[] = "Hello, world!";
+    unsigned char buffer[512];
+    disk_write(130, str, 1);
+    disk_read(130, buffer, 1);
+    printk("%s", buffer);
 }
 
