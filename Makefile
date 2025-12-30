@@ -1,20 +1,27 @@
+INCLUDE = include
+SRC 	= src
+BUILD 	= build
+BOOT	= $(BUILD)/boot
+KERNEL  = $(BUILD)/kernel
+DISKIMG = $(BUILD)/image.iso
+
 CC = gcc
 AS = as
 LD = ld
 
-CFLAGS  = -I./include
+CFLAGS  = -I$(INCLUDE)
 CFLAGS += -ffreestanding -fno-pie -fno-stack-protector
 CFLAGS += -m32 -masm=intel -mno-sse
 CFLAGS += -std=c99 -Werror -Wall -Wextra
 CFLAGS += -O3
 
-OBJECTS  = build/start.o build/kernel.o
-OBJECTS += build/idt.o build/isr.o build/keyboard.o
-OBJECTS += build/disk.o
-OBJECTS += build/tty.o build/console.o build/vga8x16.o
-OBJECTS += build/string.o build/vsprintf.o build/printk.o
+LDFLAGS =  --oformat binary -m elf_i386
 
-DISKIMG = image.iso
+OBJECTS  = $(BUILD)/start.o $(BUILD)/kernel.o
+OBJECTS += $(BUILD)/idt.o $(BUILD)/isr.o $(BUILD)/keyboard.o
+OBJECTS += $(BUILD)/disk.o
+OBJECTS += $(BUILD)/tty.o $(BUILD)/console.o $(BUILD)/vga8x16.o
+OBJECTS += $(BUILD)/string.o $(BUILD)/vsprintf.o $(BUILD)/printk.o
 
 .PHONY: all run clean
 
@@ -23,29 +30,26 @@ all: $(DISKIMG)
 run: $(DISKIMG)
 	qemu-system-x86_64 -drive format=raw,file=$(DISKIMG)
 
-$(DISKIMG): bin/boot bin/kernel
+$(DISKIMG): $(BOOT) $(KERNEL)
 	dd if=/dev/zero of=$@ bs=512 count=2048
-	dd if=bin/boot of=$@ conv=notrunc bs=512 seek=0 count=1
-	dd if=bin/kernel of=$@ conv=notrunc bs=512 seek=1 count=128
+	dd if=$(BOOT) of=$@ conv=notrunc bs=512 seek=0 count=1
+	dd if=$(KERNEL) of=$@ conv=notrunc bs=512 seek=1 count=128
 
-bin/boot: build/boot.o
-	$(LD) -o $@ $^ -Ttext 0x7c00 --oformat binary
+$(BOOT): $(BOOT).o
+	$(LD) -o $@ $^ -Ttext 0x7c00 $(LDFLAGS)
 
-build/boot.o: src/boot.s
-	$(AS) -o $@ $<
+$(KERNEL): $(OBJECTS)
+	$(LD) -o $@ $^ -Ttext 0x10000 $(LDFLAGS)
 
-bin/kernel: $(OBJECTS)
-	$(LD) -o $@ $^ -Ttext 0x10000 --oformat binary -m elf_i386
+$(BUILD)/%.o: $(SRC)/%.c
+	$(CC) -o $@ -c $^ $(CFLAGS)
 
-build/%.o: src/%.c
-	$(CC) -o $@ -c $< $(CFLAGS)
+$(BUILD)/%.o: $(SRC)/%.s
+	$(AS) -o $@ $^ --32
 
-build/%.o: src/%.s
-	$(AS) -o $@ $< --32
-
-build/%.o: src/%.font
-	$(LD) -o $@ -b binary $< -r -m elf_i386
+$(BUILD)/%.o: $(SRC)/%.font
+	$(LD) -o $@ -b binary $^ -r -m elf_i386
 
 clean:
-	$(RM) build/* bin/* $(DISKIMG)
+	$(RM) $(BUILD)/*
 
