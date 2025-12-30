@@ -3,7 +3,8 @@ AS = as
 LD = ld
 
 CFLAGS  = -I./include
-CFLAGS += -fno-pie -ffreestanding -masm=intel -m32
+CFLAGS += -ffreestanding -fno-pie -fno-stack-protector
+CFLAGS += -m32 -masm=intel -mno-sse
 CFLAGS += -std=c99 -Werror -Wall -Wextra
 CFLAGS += -O3
 
