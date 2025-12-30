@@ -10,7 +10,7 @@
         "push %0\n" \
         "call printk\n" \
         "add esp, 8\n" \
-        :: "p"(#reg "=%#x\r\n") \
+        :: "p"(#reg "=%#x\n") \
     )
 
 void timer_irq() {
