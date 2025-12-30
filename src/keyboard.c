@@ -1,6 +1,6 @@
-#include <io.h>
-#include <tty.h>
-#include <kernel.h>
+#include "io.h"
+#include "tty.h"
+#include "kernel.h"
 
 #define LCTRL 1
 #define RCTRL 2

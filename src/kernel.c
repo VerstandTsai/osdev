@@ -1,8 +1,7 @@
-#include <kernel.h>
-#include <tty.h>
-#include <disk.h>
-#include <idt.h>
-#include <io.h>
+#include "kernel.h"
+#include "tty.h"
+#include "disk.h"
+#include "idt.h"
 
 #define printreg(reg) \
     __asm__( \

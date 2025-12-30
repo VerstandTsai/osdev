@@ -1,6 +1,6 @@
 #include <stdarg.h>
-#include <kernel.h>
-#include <tty.h>
+#include "kernel.h"
+#include "tty.h"
 
 static char buffer[1024];
 

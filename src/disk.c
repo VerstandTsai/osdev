@@ -1,6 +1,6 @@
-#include <disk.h>
+#include "disk.h"
+#include "io.h"
 #include <stdint.h>
-#include <io.h>
 
 #define DISK_IO 0x1f0
 #define DISK_SECTORS (DISK_IO + 2)
