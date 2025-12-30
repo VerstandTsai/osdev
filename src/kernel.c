@@ -27,6 +27,6 @@ void kmain() {
     unsigned char buffer[512];
     disk_write(130, str, 1);
     disk_read(130, buffer, 1);
-    printk("%s", buffer);
+    printk("%s, %d", buffer, 0xffff);
 }
 

@@ -20,9 +20,14 @@ static struct Teletype ttys[64];
 void tty_init() {
     ttys[0] = (struct Teletype){
         {
+            0,
             ONLCR,
+            0,
             ICANON | ECHO,
-            SPECIAL_CHARS
+            0,
+            {},
+            {},
+            {}
         },
         {{}, 0, 0},
         {{}, 0, 0},

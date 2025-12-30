@@ -167,8 +167,8 @@ int vsprintf(char *str, const char *format, va_list ap) {
                 issigned = conversion == 'd' || conversion == 'i' ? 1 : 0;
                 switch (length) {
                 case LEN_NONE:  READ_INTEGER(number, issigned, int      ); break;
-                case LEN_CHAR:  READ_INTEGER(number, issigned, char     ); break;
-                case LEN_SHORT: READ_INTEGER(number, issigned, short    ); break;
+                case LEN_CHAR:  READ_INTEGER(number, issigned, int      ); break;
+                case LEN_SHORT: READ_INTEGER(number, issigned, int      ); break;
                 case LEN_LONG:  READ_INTEGER(number, issigned, long     ); break;
                 case LEN_LDOUBLE:
                 case LEN_LLONG: READ_INTEGER(number, issigned, long long); break;
@@ -202,7 +202,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
             }
             break;
         case 'c':
-            buffer[0] = va_arg(ap, char);
+            buffer[0] = va_arg(ap, int);
             buffer[1] = '\0';
             break;
         case 's':

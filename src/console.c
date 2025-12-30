@@ -1,6 +1,5 @@
 #include "vesa.h"
 #include "tty.h"
-#include <stdint.h>
 #include <string.h>
 
 #define FONT _binary_src_vga8x16_font_start

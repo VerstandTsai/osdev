@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include "kernel.h"
 #include "tty.h"
 
