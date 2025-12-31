@@ -32,22 +32,22 @@ $(DISKIMG): $(BOOT) $(KERNEL)
 	dd if=$(KERNEL) of=$@ conv=notrunc bs=512 seek=1 count=128
 
 $(BOOT).elf:  $(BOOT).o
-	$(LD) -o $@ $^ -Ttext 0x7c00 $(LDFLAGS)
+	$(LD) -o $@ -Ttext 0x7c00 $(LDFLAGS) $^
 
 $(KERNEL).elf: $(OBJECTS)
-	$(LD) -o $@ $^ -Ttext 0x10000 $(LDFLAGS)
+	$(LD) -o $@ -Ttext 0x10000 $(LDFLAGS) $^
 
 $(BUILD)/%.o: $(SRC)/%.c
-	$(CC) -o $@ -c $^ $(CFLAGS)
+	$(CC) -o $@ $(CFLAGS) -c $^
 
 $(BUILD)/%.o: $(SRC)/%.s
-	$(AS) -o $@ $^ --32
+	$(AS) -o $@ --32 $^
 
 $(BUILD)/%.o: $(SRC)/%.font
-	$(LD) -o $@ -b binary $^ -r $(LDFLAGS)
+	$(LD) -o $@ -b binary -r $(LDFLAGS) $^
 
 $(BUILD)/%: $(BUILD)/%.elf
-	objcopy -O binary $^ $@
+	objcopy -O binary -R .note.gnu.property $^ $@
 
 clean:
 	$(RM) $(BUILD)/*
