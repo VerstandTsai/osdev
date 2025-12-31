@@ -16,7 +16,7 @@ void timer_irq() {
     printk("timer\r\n");
 }
 
-void kmain() {
+int main(void) {
     console_init();
     tty_init();
     idt_init();
@@ -28,5 +28,6 @@ void kmain() {
     disk_write(130, str, 1);
     disk_read(130, buffer, 1);
     printk("%s, %d", buffer, 0xffff);
+    return 0;
 }
 

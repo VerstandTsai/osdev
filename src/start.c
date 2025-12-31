@@ -1,7 +1,7 @@
-void kmain();
+int main(void);
 
 void _start() {
-    kmain();
+    main();
     for (;;);
 }
 
