@@ -1,4 +1,5 @@
-#include "kernel.h"
+#include <stdarg.h>
+#include <stdio.h>
 #include "tty.h"
 
 static char buffer[1024];

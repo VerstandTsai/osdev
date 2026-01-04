@@ -12,12 +12,12 @@ _start:
     mov ss, ax
     mov sp, 0x9000
 
-    # Load the kernel at 0x10000
+    # Load the bootloader at 0x10000
     mov ax, 0x1000
     mov es, ax
     xor bx, bx
     mov ah, 0x02
-    mov al, 128         # Number of sectors to read
+    mov al, 7           # Number of sectors to read
     xor dh, dh          # Head 0
     xor ch, ch          # Cylinder 0
     mov cl, 2           # Sector 2

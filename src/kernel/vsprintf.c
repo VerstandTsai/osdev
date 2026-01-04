@@ -164,7 +164,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
         case 'X':
             {
                 unsigned long long number;
-                issigned = conversion == 'd' || conversion == 'i' ? 1 : 0;
+                issigned = conversion == 'd' || conversion == 'i';
                 switch (length) {
                 case LEN_NONE:  READ_INTEGER(number, issigned, int      ); break;
                 case LEN_CHAR:  READ_INTEGER(number, issigned, int      ); break;
@@ -195,7 +195,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
 
             if (flags & FLAG_ALT) {
                 switch (conversion) {
-                case 'o': strcpy(prefix, "0"); break;
+                case 'o': strcpy(prefix, "0" ); break;
                 case 'x': strcpy(prefix, "0x"); break;
                 case 'X': strcpy(prefix, "0X"); break;
                 }

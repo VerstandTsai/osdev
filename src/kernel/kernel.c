@@ -12,6 +12,8 @@
         :: "p"(#reg "=%#x\n") \
     )
 
+extern void keyboard_irq();
+
 void timer_irq() {
     printk("timer\r\n");
 }

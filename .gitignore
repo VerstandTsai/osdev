@@ -2,7 +2,7 @@
 !.gitignore
 !Makefile
 !include/
-!include/*
+!include/**
 !src/
-!src/*
+!src/**
 
